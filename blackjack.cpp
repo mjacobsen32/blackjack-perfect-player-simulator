@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -23,8 +25,8 @@ const char hard_total[18][10] = {   // 2   3   4   5   6   7   8   9  10   A
                                           'S','S','S','S','S','S','S','S','S','S', // 19
                                           'S','S','S','S','S','S','S','S','S','S', // 20
                                           'S','S','S','S','S','S','S','S','S','S', // 21
-                                    };
-    const char splitting[11][10] =  {  // 2   3   4   5   6   7   8   9   10   A
+                                };
+const char splitting[11][10] =  {  // 2   3   4   5   6   7   8   9   10   A
                                          'H','H','P','P','P','P','H','H','H','H', // 22
                                          'H','H','P','P','P','P','H','H','H','H', // 33
                                          'H','H','H','H','H','H','H','H','H','H', // 44
@@ -35,8 +37,8 @@ const char hard_total[18][10] = {   // 2   3   4   5   6   7   8   9  10   A
                                          'P','P','P','P','P','S','P','P','S','S', // 99
                                          'S','S','S','S','S','S','S','S','S','S', // TT
                                          'P','P','P','P','P','P','P','P','P','P', // AA
-                                    };
-    const char soft_total[8][10] =  {  // 2   3   4   5   6   7   8   9   10   A
+                                };
+const char soft_total[8][10] =  {  // 2   3   4   5   6   7   8   9   10   A
                                          'H','H','H','D','D','H','H','H','H','H', // A2
                                          'H','H','H','D','D','H','H','H','H','H', // A3
                                          'H','H','D','D','D','H','H','H','H','H', // A4
@@ -45,11 +47,10 @@ const char hard_total[18][10] = {   // 2   3   4   5   6   7   8   9  10   A
                                          'S','D','D','D','D','S','S','H','H','H', // A7
                                          'S','S','S','S','S','S','S','S','S','S', // A8
                                          'S','S','S','S','S','S','S','S','S','S', // A9
-                                    };
+                                };
 
 int get_card(){
-    srand(time(NULL));
-    return((rand() % 13) + 1);
+    return((rand() % 13) + 2);
 }
 
 float get_pay(int dealer, int user, float bet){
@@ -77,8 +78,11 @@ float get_pay(int dealer, int user, float bet){
     return(0);
 }
 
-char get_decision_1(int card_1, int card_2, int dealer){
-    if(card_1 == 1){
+char get_decision(int card_1, int card_2, int dealer){
+    if(card_1 == card_2){
+        return(splitting[card_1][dealer]);
+    }
+    else if(card_1 == 1){
         return(soft_total[card_1][dealer]);
     }
     else if(card_2 == 1){
@@ -89,18 +93,51 @@ char get_decision_1(int card_1, int card_2, int dealer){
     }
 }
 
+void print_vector(vector<vector<int> > vtr){
+    
+    for ( int i = 0 ; i < vtr.size(); i++ ){
+        for ( int j = 0; j < vtr[i].size() ; j++ ){
+            cout << vtr[i][j] << " " ;
+        }
+        cout << endl ;
+    }
+}
 int main(){
+    srand(time(NULL));
     int cash = 100;
-    int dealer_card = 0;
-    int player_card_1 = 0;
-    int player_card_2 = 0;
-    char player_decision = '0';
 
     while(cash > 0) {
-        dealer_card = get_card();
-        player_card_1 = get_card();
-        player_card_2 = get_card();
-        player_decision = get_decision_1(player_card_1, player_card_2, dealer_card);
+        vector<int> dealer_cards;
+        vector<vector<int> > player_cards;
 
+        dealer_cards.push_back(get_card()); // dealer card 1
+        dealer_cards.push_back(get_card()); // dealer card 2
+
+        vector<int> player;
+        player.push_back(get_card());
+        player.push_back(get_card());
+        player_cards.push_back(player);
+
+        bool split = true;
+
+        while(split == true){
+            split = false;
+            print_vector(player_cards);
+            for(int i = 0; i < player_cards.size(); i++){
+                if((player_cards[i][0] == player_cards[i][1]) && (splitting[player_cards[i][0]][dealer_cards[0]] == 'P')){
+                    cout << "SPLITTING" << endl;
+                    player_cards[i][1] = get_card();
+                    vector<int> player;
+                    player.push_back(player_cards[i][0]);
+                    player.push_back(get_card());
+                    split = true;
+                }
+            }
+        }
+
+        //play_hand(player_card_1, player_card_2);
+        //player_decision = get_decision_1(player_card_1, player_card_2, dealer_card);
+        cash -= 5;
     }
+    return 0;
 }
