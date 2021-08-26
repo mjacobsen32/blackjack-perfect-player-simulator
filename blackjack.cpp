@@ -78,6 +78,24 @@ float get_pay(int dealer, int user, float bet){
     return(0);
 }
 
+int get_dealer_hand(vector<int> cards){
+    int total = 0;
+    total = cards[0];
+    while  (total < 17) {
+        total = total + get_card();
+    }
+    return(total);
+}
+
+int play_hands(vector<int> dealer_cards, vector<vector<int> > player_cards){
+    int dealer_hand = get_dealer_hand(dealer_cards);
+    for (int i = 0; i < player_cards.size(); i++ ){
+        for (int j = 0; j < player_cards[i].size(); j++ ){
+            while
+        }
+    }
+
+}
 char get_decision(int card_1, int card_2, int dealer){
     if(card_1 == card_2){
         return(splitting[card_1][dealer]);
@@ -105,13 +123,14 @@ void print_vector(vector<vector<int> > vtr){
 int main(){
     srand(time(NULL));
     int cash = 100;
+    vector<int> dealer_cards;
+    vector<vector<int> > player_cards;
 
     while(cash > 0) {
         vector<int> dealer_cards;
         vector<vector<int> > player_cards;
 
         dealer_cards.push_back(get_card()); // dealer card 1
-        dealer_cards.push_back(get_card()); // dealer card 2
 
         vector<int> player;
         player.push_back(get_card());
@@ -135,9 +154,7 @@ int main(){
             }
         }
 
-        //play_hand(player_card_1, player_card_2);
-        //player_decision = get_decision_1(player_card_1, player_card_2, dealer_card);
-        cash -= 5;
+        cash += play_hands(dealer_cards, player_cards);
     }
     return 0;
 }
