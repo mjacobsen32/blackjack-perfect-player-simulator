@@ -108,17 +108,6 @@ float get_pay(int dealer, int user, float bet){
     return(0);
 }
 
-vector<int> get_dealer_hand(vector<int> cards){
-    int total = cards[0];
-    int new_card = 0;
-    while (total < 17) {
-        new_card = get_card();
-        cards.push_back(new_card);
-        total += new_card;
-    }
-    return(cards);
-}
-
 bool has_ace(vector<int> cards){
     for(int i = 0; i < cards.size(); i++){
         if(cards[i] == 1){
@@ -126,6 +115,24 @@ bool has_ace(vector<int> cards){
         }
     }
     return(false);
+}
+
+vector<int> get_dealer_hand(vector<int> cards){
+    int total = cards[0];
+    int new_card = get_card();
+    cards.push_back(new_card);
+    total += new_card;
+    if (has_ace(cards)){
+        total += 10;
+    }
+    while (total < 17) {
+        cards.push_back(new_card);
+        total += new_card;
+    }
+    if((total > 21) && (has_ace(cards))){
+        total -= 10;
+    }
+    return(cards);
 }
 
 int count_final_hand(vector<int> cards){
@@ -165,7 +172,7 @@ void print_cards(vector<int> cards){
     for(int i = 0; i < cards.size(); i++){
         cout << cards[i] << " ";
     }
-    cout << " ]" << endl;
+    cout << "]" << endl;
 }
 
 int play_hands(vector<int> dealer_cards, vector<vector<int> > player_cards, int bet){
