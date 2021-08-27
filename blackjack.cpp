@@ -181,7 +181,7 @@ int play_hands(vector<int> dealer_cards, vector<vector<int> > player_cards, int 
     int winnings = 0;
     cout << "dealer card up: " << dealer_cards[0] << endl;
     for (int i = 0; i < player_cards.size(); i++ ){
-        int player_hand = 0;
+        int player_hand = 0; // improved commeting ;)
         char choice = 'H';
         int hand_total = 0;
         int bet_multiplier = 1;
